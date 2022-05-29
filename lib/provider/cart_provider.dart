@@ -7,6 +7,7 @@ class CartProvider with ChangeNotifier {
   DBHelper dbHelper = DBHelper();
   int _counter = 0;
   int get counter => _counter;
+  bool _tapped = false;
 
   double _totalPrice = 0.0;
   double get totalPrice => _totalPrice;
@@ -18,6 +19,13 @@ class CartProvider with ChangeNotifier {
     _cart = dbHelper.getCartList();
     return _cart;
   }
+
+  set newTap(bool isTapped) {
+    _tapped = isTapped;
+    notifyListeners();
+  }
+
+  bool get newTap => _tapped;
 
   void _setPrefsItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

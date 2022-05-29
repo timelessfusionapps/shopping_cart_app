@@ -6,7 +6,9 @@ import 'package:shopping_cart_app/model/cart_model.dart';
 import 'package:shopping_cart_app/provider/cart_provider.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({Key? key}) : super(key: key);
+  CartScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -14,10 +16,10 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   DBHelper? dbHelper = DBHelper();
+  List<bool> tapped = [];
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

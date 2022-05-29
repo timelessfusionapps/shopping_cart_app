@@ -7,7 +7,9 @@ import 'package:shopping_cart_app/model/cart_model.dart';
 import 'package:shopping_cart_app/screens/cart_screen.dart';
 
 class ProductList extends StatefulWidget {
-  const ProductList({Key? key}) : super(key: key);
+  List<bool>? clicked = List.generate(10, (index) => false, growable: true);
+
+  ProductList({Key? key, this.clicked}) : super(key: key);
 
   @override
   State<ProductList> createState() => _ProductListState();
@@ -53,13 +55,10 @@ class _ProductListState extends State<ProductList> {
     'assets/images/strawberry.png',
     'assets/images/fruitBasket.png'
   ];
-  List<bool> _isClicked = [true];
-
+  List<bool> clicked = List.generate(10, (index) => false, growable: true);
   @override
   Widget build(BuildContext context) {
-    _isClicked = productName.map((e) => true).toList();
     final cart = Provider.of<CartProvider>(context);
-    print('1st $_isClicked');
     void saveData(int index) {
       dbHelper!
           .insert(
@@ -100,12 +99,7 @@ class _ProductListState extends State<ProductList> {
             ),
             position: const BadgePosition(start: 30, bottom: 30),
             child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CartScreen()));
-              },
+              onPressed: () {},
               icon: const Icon(Icons.shopping_cart),
             ),
           ),
@@ -190,22 +184,28 @@ class _ProductListState extends State<ProductList> {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.blueGrey.shade900),
-                      onPressed: () {
-                        if (_isClicked[index]) {
-                          setState(() {
-                            _isClicked[index] = false;
-                          });
-                          print('last $_isClicked');
-                          saveData(index);
-                        } else {
-                          null;
-                        }
-                      },
-                      child: Text(_isClicked[index] ? 'Add to Cart' : 'Added'),
-                    ),
+                    clicked[index]
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.blueGrey.shade900),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartScreen()));
+                              print(index);
+                            },
+                            child: const Text('Go to Cart'))
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.blueGrey.shade900),
+                            onPressed: () {
+                              setState(() {
+                                clicked[index] = true;
+                              });
+                              saveData(index);
+                            },
+                            child: const Text('Add to Cart')),
                   ],
                 ),
               ),
