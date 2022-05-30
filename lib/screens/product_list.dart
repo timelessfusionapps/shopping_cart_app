@@ -188,13 +188,7 @@ class _ProductListState extends State<ProductList> {
                         ? ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.blueGrey.shade900),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CartScreen()));
-                              print(index);
-                            },
+                            onPressed: null,
                             child: const Text('Go to Cart'))
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
