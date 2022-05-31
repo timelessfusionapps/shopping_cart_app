@@ -40,4 +40,11 @@ class Cart {
       'image': image,
     };
   }
+
+  Map<String, dynamic> quantityMap() {
+    return {
+      'productId': productId,
+      'quantity': quantity,
+    };
+  }
 }

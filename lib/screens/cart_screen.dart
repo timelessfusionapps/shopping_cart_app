@@ -6,7 +6,7 @@ import 'package:shopping_cart_app/model/cart_model.dart';
 import 'package:shopping_cart_app/provider/cart_provider.dart';
 
 class CartScreen extends StatefulWidget {
-  CartScreen({
+  const CartScreen({
     Key? key,
   }) : super(key: key);
 
@@ -54,107 +54,160 @@ class _CartScreenState extends State<CartScreen> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<Cart>> snapshot) {
                 if (snapshot.hasData) {
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: Colors.blueGrey.shade200,
-                          elevation: 5.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image(
-                                  height: 80,
-                                  width: 80,
-                                  image: AssetImage(
-                                      snapshot.data![index].image.toString()),
-                                ),
-                                SizedBox(
-                                  width: 130,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        height: 5.0,
-                                      ),
-                                      RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                            text: 'Name: ',
-                                            style: TextStyle(
-                                                color: Colors.blueGrey.shade800,
-                                                fontSize: 16.0),
-                                            children: [
-                                              TextSpan(
-                                                  text:
-                                                      '${snapshot.data![index].productName.toString()}\n',
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ]),
-                                      ),
-                                      RichText(
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                            text: 'Unit: ',
-                                            style: TextStyle(
-                                                color: Colors.blueGrey.shade800,
-                                                fontSize: 16.0),
-                                            children: [
-                                              TextSpan(
-                                                  text:
-                                                      '${snapshot.data![index].unitTag.toString()}\n',
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ]),
-                                      ),
-                                      RichText(
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                            text: 'Price: ' r"$",
-                                            style: TextStyle(
-                                                color: Colors.blueGrey.shade800,
-                                                fontSize: 16.0),
-                                            children: [
-                                              TextSpan(
-                                                  text:
-                                                      '${snapshot.data![index].productPrice.toString()}\n',
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ]),
-                                      ),
-                                    ],
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text(
+                      'Your Cart is Empty',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18.0),
+                    ));
+                  } else {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            color: Colors.blueGrey.shade200,
+                            elevation: 5.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Image(
+                                    height: 80,
+                                    width: 80,
+                                    image: AssetImage(
+                                        snapshot.data![index].image.toString()),
                                   ),
-                                ),
-                                const PlusMinusButtons(),
-                                IconButton(
-                                    onPressed: () {
-                                      dbHelper!.deleteCartItem(
-                                          snapshot.data![index].id!);
-                                      cart.removeCounter();
+                                  SizedBox(
+                                    width: 130,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 5.0,
+                                        ),
+                                        RichText(
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                              text: 'Name: ',
+                                              style: TextStyle(
+                                                  color:
+                                                      Colors.blueGrey.shade800,
+                                                  fontSize: 16.0),
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                        '${snapshot.data![index].productName.toString()}\n',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ]),
+                                        ),
+                                        RichText(
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                              text: 'Unit: ',
+                                              style: TextStyle(
+                                                  color:
+                                                      Colors.blueGrey.shade800,
+                                                  fontSize: 16.0),
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                        '${snapshot.data![index].unitTag.toString()}\n',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ]),
+                                        ),
+                                        RichText(
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                              text: 'Price: ' r"$",
+                                              style: TextStyle(
+                                                  color:
+                                                      Colors.blueGrey.shade800,
+                                                  fontSize: 16.0),
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                        '${snapshot.data![index].productPrice.toString()}\n',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PlusMinusButtons(
+                                    addQuantity: () {
+                                      cart.addQuantity(
+                                          snapshot.data![index].quantity!);
+                                      dbHelper!
+                                          .updateQuantity(Cart(
+                                              id: index,
+                                              productId: index.toString(),
+                                              productName: snapshot
+                                                  .data![index].productName,
+                                              initialPrice: snapshot
+                                                  .data![index].initialPrice,
+                                              productPrice: snapshot
+                                                  .data![index].productPrice,
+                                              quantity: snapshot
+                                                  .data![index].quantity,
+                                              unitTag:
+                                                  snapshot.data![index].unitTag,
+                                              image:
+                                                  snapshot.data![index].image))
+                                          .then((value) => cart.addTotalPrice(
+                                              double.parse(snapshot
+                                                  .data![index].productPrice
+                                                  .toString())));
+                                    },
+                                    deleteQuantity: () {
+                                      cart.deleteQuantity(
+                                          snapshot.data![index].quantity!);
                                       cart.removeTotalPrice(double.parse(
                                           snapshot.data![index].productPrice
                                               .toString()));
                                     },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.red.shade800,
-                                    )),
-                              ],
+                                    text: cart
+                                        .getQuantity(
+                                            snapshot.data![index].quantity!)
+                                        .toString(),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        dbHelper!.deleteCartItem(
+                                            snapshot.data![index].id!);
+                                        cart.removeCounter();
+                                        cart.removeTotalPrice(double.parse(
+                                            snapshot.data![index].productPrice
+                                                .toString()));
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red.shade800,
+                                      )),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      });
+                          );
+                        });
+                  }
                 }
-                return const Text('Your Cart is Empty');
+                return const Center(
+                    child: Text(
+                  'Your Cart is Empty',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                ));
               },
             ),
           ),
@@ -197,23 +250,24 @@ class _CartScreenState extends State<CartScreen> {
   }
 }
 
-class PlusMinusButtons extends StatefulWidget {
-  const PlusMinusButtons({Key? key}) : super(key: key);
+class PlusMinusButtons extends StatelessWidget {
+  final VoidCallback deleteQuantity;
+  final VoidCallback addQuantity;
+  final String text;
+  const PlusMinusButtons(
+      {Key? key,
+      required this.addQuantity,
+      required this.deleteQuantity,
+      required this.text})
+      : super(key: key);
 
-  @override
-  State<PlusMinusButtons> createState() => _PlusMinusButtonsState();
-}
-
-class _PlusMinusButtonsState extends State<PlusMinusButtons> {
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context);
-
     return Row(
       children: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.remove)),
-        Text(''),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+        IconButton(onPressed: deleteQuantity, icon: const Icon(Icons.remove)),
+        Text(text),
+        IconButton(onPressed: addQuantity, icon: const Icon(Icons.add)),
       ],
     );
   }
@@ -221,7 +275,7 @@ class _PlusMinusButtonsState extends State<PlusMinusButtons> {
 
 class ReusableWidget extends StatelessWidget {
   final String title, value;
-  const ReusableWidget({required this.title, required this.value});
+  const ReusableWidget({Key? key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {

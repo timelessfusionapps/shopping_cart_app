@@ -7,16 +7,14 @@ import 'package:shopping_cart_app/model/cart_model.dart';
 import 'package:shopping_cart_app/screens/cart_screen.dart';
 
 class ProductList extends StatefulWidget {
-  List<bool>? clicked = List.generate(10, (index) => false, growable: true);
-
-  ProductList({Key? key, this.clicked}) : super(key: key);
+  const ProductList({Key? key}) : super(key: key);
 
   @override
   State<ProductList> createState() => _ProductListState();
 }
 
 class _ProductListState extends State<ProductList> {
-  DBHelper? dbHelper = DBHelper();
+  DBHelper dbHelper = DBHelper();
 
   List<String> productName = [
     'Apple',
@@ -60,7 +58,7 @@ class _ProductListState extends State<ProductList> {
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
     void saveData(int index) {
-      dbHelper!
+      dbHelper
           .insert(
         Cart(
           id: index,
@@ -99,7 +97,10 @@ class _ProductListState extends State<ProductList> {
             ),
             position: const BadgePosition(start: 30, bottom: 30),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const CartScreen()));
+              },
               icon: const Icon(Icons.shopping_cart),
             ),
           ),
@@ -184,28 +185,18 @@ class _ProductListState extends State<ProductList> {
                         ],
                       ),
                     ),
-                    clicked[index]
-                        ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.blueGrey.shade900),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CartScreen()));
-                              print(index);
-                            },
-                            child: const Text('Go to Cart'))
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.blueGrey.shade900),
-                            onPressed: () {
-                              setState(() {
-                                clicked[index] = true;
-                              });
-                              saveData(index);
-                            },
-                            child: const Text('Add to Cart')),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: clicked[index]
+                                ? Colors.yellow[700]
+                                : Colors.blueGrey.shade900),
+                        onPressed: () {
+                          setState(() {
+                            clicked[index] = true;
+                          });
+                          saveData(index);
+                        },
+                        child: const Text('Add to Cart')),
                   ],
                 ),
               ),

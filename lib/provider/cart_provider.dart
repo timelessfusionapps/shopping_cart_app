@@ -6,8 +6,9 @@ import 'package:shopping_cart_app/model/cart_model.dart';
 class CartProvider with ChangeNotifier {
   DBHelper dbHelper = DBHelper();
   int _counter = 0;
+  int _quantity = 1;
   int get counter => _counter;
-  bool _tapped = false;
+  int get quantity => _quantity;
 
   double _totalPrice = 0.0;
   double get totalPrice => _totalPrice;
@@ -20,16 +21,10 @@ class CartProvider with ChangeNotifier {
     return _cart;
   }
 
-  set newTap(bool isTapped) {
-    _tapped = isTapped;
-    notifyListeners();
-  }
-
-  bool get newTap => _tapped;
-
   void _setPrefsItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('cart_items', _counter);
+    // prefs.setInt('item_quantity', _quantity);
     prefs.setDouble('total_price', _totalPrice);
     notifyListeners();
   }
@@ -37,6 +32,7 @@ class CartProvider with ChangeNotifier {
   void _getPrefsItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _counter = prefs.getInt('cart_items') ?? 0;
+    //_quantity = prefs.getInt('item_quantity') ?? 1;
     _totalPrice = prefs.getDouble('total_price') ?? 0;
   }
 
@@ -55,6 +51,23 @@ class CartProvider with ChangeNotifier {
   int getCounter() {
     _getPrefsItems();
     return _counter;
+  }
+
+  void addQuantity(int quantity) {
+    _quantity = _quantity + quantity;
+    //_setPrefsItems();
+    notifyListeners();
+  }
+
+  void deleteQuantity(int quantity) {
+    _quantity = _quantity - quantity;
+    //_setPrefsItems();
+    notifyListeners();
+  }
+
+  int getQuantity(int quantity) {
+    //_getPrefsItems();
+    return _quantity;
   }
 
   void addTotalPrice(double productPrice) {
