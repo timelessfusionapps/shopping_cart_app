@@ -24,7 +24,7 @@ class CartProvider with ChangeNotifier {
   void _setPrefsItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('cart_items', _counter);
-    // prefs.setInt('item_quantity', _quantity);
+    prefs.setInt('item_quantity', _quantity);
     prefs.setDouble('total_price', _totalPrice);
     notifyListeners();
   }
@@ -32,7 +32,7 @@ class CartProvider with ChangeNotifier {
   void _getPrefsItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _counter = prefs.getInt('cart_items') ?? 0;
-    //_quantity = prefs.getInt('item_quantity') ?? 1;
+    _quantity = prefs.getInt('item_quantity') ?? 1;
     _totalPrice = prefs.getDouble('total_price') ?? 0;
   }
 
@@ -56,6 +56,7 @@ class CartProvider with ChangeNotifier {
   void addQuantity(int id) {
     final index = cart.indexWhere((element) => element.id == id);
     cart[index].quantity!.value = cart[index].quantity!.value + 1;
+    _setPrefsItems();
     notifyListeners();
   }
 
@@ -67,17 +68,19 @@ class CartProvider with ChangeNotifier {
     } else {
       cart[index].quantity!.value = currentQuantity - 1;
     }
+    _setPrefsItems();
     notifyListeners();
   }
 
   void removeItem(int id) {
     final index = cart.indexWhere((element) => element.id == id);
     cart.removeAt(index);
+    _setPrefsItems();
     notifyListeners();
   }
 
   int getQuantity(int quantity) {
-    //_getPrefsItems();
+    _getPrefsItems();
     return _quantity;
   }
 
