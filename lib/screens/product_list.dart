@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_cart_app/model/item_model.dart';
 import 'package:shopping_cart_app/provider/cart_provider.dart';
 import 'package:shopping_cart_app/database/db_helper.dart';
 import 'package:shopping_cart_app/model/cart_model.dart';
@@ -16,43 +17,52 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   DBHelper dbHelper = DBHelper();
 
-  List<String> productName = [
-    'Apple',
-    'Mango',
-    'Banana',
-    'Grapes',
-    'Water Melon',
-    'Kiwi',
-    'Orange',
-    'Peach',
-    'Strawberry',
-    'Fruit Basket'
+  List<Item> products = [
+    Item(
+        name: 'Apple',
+        unit: 'Kg',
+        price: 120,
+        image: 'assets/images/apple.png'),
+    Item(
+        name: 'Mango',
+        unit: 'Doz',
+        price: 300,
+        image: 'assets/images/mango.png'),
+    Item(
+        name: 'Banana',
+        unit: 'Doz',
+        price: 30,
+        image: 'assets/images/banana.png'),
+    Item(
+        name: 'Grapes',
+        unit: 'Kg',
+        price: 50,
+        image: 'assets/images/grapes.png'),
+    Item(
+        name: 'Water Melon',
+        unit: 'Kg',
+        price: 130,
+        image: 'assets/images/watermelon.png'),
+    Item(name: 'Kiwi', unit: 'Pc', price: 40, image: 'assets/images/kiwi.png'),
+    Item(
+        name: 'Orange',
+        unit: 'Doz',
+        price: 60,
+        image: 'assets/images/orange.png'),
+    Item(
+        name: 'Peach', unit: 'Pc', price: 40, image: 'assets/images/peach.png'),
+    Item(
+        name: 'Strawberry',
+        unit: 'Box',
+        price: 100,
+        image: 'assets/images/strawberry.png'),
+    Item(
+        name: 'Fruit Basket',
+        unit: 'Kg',
+        price: 300,
+        image: 'assets/images/fruitBasket.png'),
   ];
-  List<String> productUnit = [
-    'Kg',
-    'Doz',
-    'Doz',
-    'Kg',
-    'Kg',
-    'Pc',
-    'Doz',
-    'Pc',
-    'Box',
-    'Kg'
-  ];
-  List<int> productPrice = [120, 300, 30, 50, 130, 40, 60, 40, 100, 300];
-  List<String> productImage = [
-    'assets/images/apple.png',
-    'assets/images/mango.png',
-    'assets/images/banana.png',
-    'assets/images/grapes.png',
-    'assets/images/watermelon.png',
-    'assets/images/kiwi.png',
-    'assets/images/orange.png',
-    'assets/images/peach.png',
-    'assets/images/strawberry.png',
-    'assets/images/fruitBasket.png'
-  ];
+
   List<bool> clicked = List.generate(10, (index) => false, growable: true);
   @override
   Widget build(BuildContext context) {
@@ -63,16 +73,16 @@ class _ProductListState extends State<ProductList> {
         Cart(
           id: index,
           productId: index.toString(),
-          productName: productName[index].toString(),
-          initialPrice: productPrice[index],
-          productPrice: productPrice[index],
-          quantity: 1,
-          unitTag: productUnit[index].toString(),
-          image: productImage[index].toString(),
+          productName: products[index].name,
+          initialPrice: products[index].price,
+          productPrice: products[index].price,
+          quantity: ValueNotifier(1),
+          unitTag: products[index].unit,
+          image: products[index].image,
         ),
       )
           .then((value) {
-        cart.addTotalPrice(double.parse(productPrice[index].toString()));
+        cart.addTotalPrice(products[index].price.toDouble());
         cart.addCounter();
         print('Product Added to cart');
       }).onError((error, stackTrace) {
@@ -89,7 +99,7 @@ class _ProductListState extends State<ProductList> {
             badgeContent: Consumer<CartProvider>(
               builder: (context, value, child) {
                 return Text(
-                  value.getCounter().toString(),
+                  value.cart.length.toString(),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 );
@@ -98,8 +108,10 @@ class _ProductListState extends State<ProductList> {
             position: const BadgePosition(start: 30, bottom: 30),
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CartScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
               },
               icon: const Icon(Icons.shopping_cart),
             ),
@@ -112,7 +124,7 @@ class _ProductListState extends State<ProductList> {
       body: ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
           shrinkWrap: true,
-          itemCount: productName.length,
+          itemCount: products.length,
           itemBuilder: (context, index) {
             return Card(
               color: Colors.blueGrey.shade200,
@@ -126,7 +138,7 @@ class _ProductListState extends State<ProductList> {
                     Image(
                       height: 80,
                       width: 80,
-                      image: AssetImage(productImage[index].toString()),
+                      image: AssetImage(products[index].image.toString()),
                     ),
                     SizedBox(
                       width: 130,
@@ -147,7 +159,7 @@ class _ProductListState extends State<ProductList> {
                                 children: [
                                   TextSpan(
                                       text:
-                                          '${productName[index].toString()}\n',
+                                          '${products[index].name.toString()}\n',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ]),
@@ -162,7 +174,7 @@ class _ProductListState extends State<ProductList> {
                                 children: [
                                   TextSpan(
                                       text:
-                                          '${productUnit[index].toString()}\n',
+                                          '${products[index].unit.toString()}\n',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ]),
@@ -177,7 +189,7 @@ class _ProductListState extends State<ProductList> {
                                 children: [
                                   TextSpan(
                                       text:
-                                          '${productPrice[index].toString()}\n',
+                                          '${products[index].price.toString()}\n',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ]),

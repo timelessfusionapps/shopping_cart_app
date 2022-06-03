@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+
 class Cart {
   late final int? id;
   final String? productId;
   final String? productName;
   final int? initialPrice;
   final int? productPrice;
-  final int? quantity;
+  final ValueNotifier<int>? quantity;
   final String? unitTag;
   final String? image;
 
@@ -24,7 +26,7 @@ class Cart {
         productName = data['productName'],
         initialPrice = data['initialPrice'],
         productPrice = data['productPrice'],
-        quantity = data['quantity'],
+        quantity = ValueNotifier(data['quantity']),
         unitTag = data['unitTag'],
         image = data['image'];
 
@@ -35,7 +37,7 @@ class Cart {
       'productName': productName,
       'initialPrice': initialPrice,
       'productPrice': productPrice,
-      'quantity': quantity,
+      'quantity': quantity?.value,
       'unitTag': unitTag,
       'image': image,
     };
@@ -44,7 +46,7 @@ class Cart {
   Map<String, dynamic> quantityMap() {
     return {
       'productId': productId,
-      'quantity': quantity,
+      'quantity': quantity!.value,
     };
   }
 }
