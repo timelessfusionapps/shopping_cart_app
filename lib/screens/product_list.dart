@@ -19,51 +19,47 @@ class _ProductListState extends State<ProductList> {
 
   List<Item> products = [
     Item(
-        name: 'Apple',
-        unit: 'Kg',
-        price: 120,
-        image: 'assets/images/apple.png'),
+        name: 'Apple', unit: 'Kg', price: 20, image: 'assets/images/apple.png'),
     Item(
         name: 'Mango',
         unit: 'Doz',
-        price: 300,
+        price: 30,
         image: 'assets/images/mango.png'),
     Item(
         name: 'Banana',
         unit: 'Doz',
-        price: 30,
+        price: 10,
         image: 'assets/images/banana.png'),
     Item(
         name: 'Grapes',
         unit: 'Kg',
-        price: 50,
+        price: 8,
         image: 'assets/images/grapes.png'),
     Item(
         name: 'Water Melon',
         unit: 'Kg',
-        price: 130,
+        price: 25,
         image: 'assets/images/watermelon.png'),
     Item(name: 'Kiwi', unit: 'Pc', price: 40, image: 'assets/images/kiwi.png'),
     Item(
         name: 'Orange',
         unit: 'Doz',
-        price: 60,
+        price: 15,
         image: 'assets/images/orange.png'),
-    Item(
-        name: 'Peach', unit: 'Pc', price: 40, image: 'assets/images/peach.png'),
+    Item(name: 'Peach', unit: 'Pc', price: 8, image: 'assets/images/peach.png'),
     Item(
         name: 'Strawberry',
         unit: 'Box',
-        price: 100,
+        price: 12,
         image: 'assets/images/strawberry.png'),
     Item(
         name: 'Fruit Basket',
         unit: 'Kg',
-        price: 300,
+        price: 55,
         image: 'assets/images/fruitBasket.png'),
   ];
 
-  List<bool> clicked = List.generate(10, (index) => false, growable: true);
+  //List<bool> clicked = List.generate(10, (index) => false, growable: true);
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -99,7 +95,7 @@ class _ProductListState extends State<ProductList> {
             badgeContent: Consumer<CartProvider>(
               builder: (context, value, child) {
                 return Text(
-                  value.cart.length.toString(),
+                  value.getCounter().toString(),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 );
@@ -199,13 +195,8 @@ class _ProductListState extends State<ProductList> {
                     ),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: clicked[index]
-                                ? Colors.yellow[700]
-                                : Colors.blueGrey.shade900),
+                            primary: Colors.blueGrey.shade900),
                         onPressed: () {
-                          setState(() {
-                            clicked[index] = true;
-                          });
                           saveData(index);
                         },
                         child: const Text('Add to Cart')),

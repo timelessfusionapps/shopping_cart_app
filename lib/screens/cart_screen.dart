@@ -36,7 +36,7 @@ class _CartScreenState extends State<CartScreen> {
             badgeContent: Consumer<CartProvider>(
               builder: (context, value, child) {
                 return Text(
-                  value.cart.length.toString(),
+                  value.getCounter().toString(),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 );
@@ -194,12 +194,9 @@ class _CartScreenState extends State<CartScreen> {
                                     onPressed: () {
                                       dbHelper!.deleteCartItem(
                                           provider.cart[index].id!);
-                                      // cart.removeCounter();
-                                      // cart.removeTotalPrice(double.parse(
-                                      //     provider.cart[index].productPrice
-                                      //         .toString()));
                                       provider
                                           .removeItem(provider.cart[index].id!);
+                                      provider.removeCounter();
                                     },
                                     icon: Icon(
                                       Icons.delete,
@@ -211,22 +208,17 @@ class _CartScreenState extends State<CartScreen> {
                         );
                       });
                 }
-                return const Center(
-                    child: Text(
-                  'Your Cart is Empty',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-                ));
               },
             ),
           ),
           Consumer<CartProvider>(
             builder: (BuildContext context, value, Widget? child) {
               final ValueNotifier<int?> totalPrice = ValueNotifier(null);
-              value.cart.forEach((element) {
+              for (var element in value.cart) {
                 totalPrice.value =
                     (element.productPrice! * element.quantity!.value) +
                         (totalPrice.value ?? 0);
-              });
+              }
               return Column(
                 children: [
                   ValueListenableBuilder<int?>(

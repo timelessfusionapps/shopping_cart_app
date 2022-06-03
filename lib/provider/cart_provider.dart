@@ -63,7 +63,7 @@ class CartProvider with ChangeNotifier {
     final index = cart.indexWhere((element) => element.id == id);
     final currentQuantity = cart[index].quantity!.value;
     if (currentQuantity <= 1) {
-      removeItem(id);
+      currentQuantity == 1;
     } else {
       cart[index].quantity!.value = currentQuantity - 1;
     }
