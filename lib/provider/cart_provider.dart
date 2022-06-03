@@ -13,12 +13,12 @@ class CartProvider with ChangeNotifier {
   double _totalPrice = 0.0;
   double get totalPrice => _totalPrice;
 
-  late Future<List<Cart>> _cart;
-  Future<List<Cart>> get cart => _cart;
+  List<Cart> cart = [];
 
   Future<List<Cart>> getData() async {
-    _cart = dbHelper.getCartList();
-    return _cart;
+    cart = await dbHelper.getCartList();
+    notifyListeners();
+    return cart;
   }
 
   void _setPrefsItems() async {
@@ -53,15 +53,26 @@ class CartProvider with ChangeNotifier {
     return _counter;
   }
 
-  void addQuantity(int quantity) {
-    _quantity = _quantity + quantity;
-    //_setPrefsItems();
+  void addQuantity(int id) {
+    final index = cart.indexWhere((element) => element.id == id);
+    cart[index].quantity!.value = cart[index].quantity!.value + 1;
     notifyListeners();
   }
 
-  void deleteQuantity(int quantity) {
-    _quantity = _quantity - quantity;
-    //_setPrefsItems();
+  void deleteQuantity(int id) {
+    final index = cart.indexWhere((element) => element.id == id);
+    final currentQuantity = cart[index].quantity!.value;
+    if (currentQuantity <= 1) {
+      removeItem(id);
+    } else {
+      cart[index].quantity!.value = currentQuantity - 1;
+    }
+    notifyListeners();
+  }
+
+  void removeItem(int id) {
+    final index = cart.indexWhere((element) => element.id == id);
+    cart.removeAt(index);
     notifyListeners();
   }
 
